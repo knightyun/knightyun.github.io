@@ -14,8 +14,8 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 #title: ""
-description: "> ＃这意味着在"baseurl："之前忽略换行符
-  Material theme based on <a href="http://materializecss.com">Materialize.css</a> for jekyll sites"
+description: > ＃这意味着在"baseurl："之前忽略换行符
+  Material theme based on <a href="http://materializecss.com">Materialize.css</a> for jekyll sites
 baseurl: "/"
 url: "https://edgorange.github.io/"
 permalink: "/:year/:month/:day/:title"
