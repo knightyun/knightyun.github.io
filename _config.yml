@@ -13,13 +13,13 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-标题：王成成的博客
+标题："王成成的博客"
 description ：> ＃这意味着在“baseurl：”之前忽略换行符
   Material theme based on <a href="http://materializecss.com">Materialize.css</a> for jekyll sites
 baseurl: "/"
 url: "https://edgorange.github.io/"
-permalink: /:year/:month/:day/:title
-repository: EDGorange/EDGorange.github.io
+permalink: "/:year/:month/:day/:title"
+repository: "EDGorange/EDGorange.github.io"
 paginate: 5
 
 # MatJek specific configurations
@@ -32,7 +32,7 @@ user_email: "1049621484@qq.com"
 # disqus_shortname: "黄琦雲"
 
 # Build settings
-markdown: kramdown
+markdown: "kramdown"
 plugins:
   - jekyll-feed
   - jekyll-paginate
@@ -43,5 +43,5 @@ exclude:
   - Gemfile.lock
   - README.md
 sass:
-  style: compressed
-future: true
+  style: "compressed"
+future: "true"
