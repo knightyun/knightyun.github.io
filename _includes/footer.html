@@ -3,7 +3,7 @@
 <footer class="page-footer teal">
     <div class="container">
         <div class="row">
-            <div class="col s12">
+            <div class="col s12 col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <img src="{{site.baseurl}}/assets/res/u=1220854901,3787635943&fm=11&gp=0.jpg" alt="logo" />
                 <span class="footer-message">&nbsp;勤奋的程序猿，用心敲写明天</span>
                 <p>
@@ -11,11 +11,109 @@
                     <span id="busuanzi_container_site_pv">访客量：<span id="busuanzi_value_site_uv"></span>人次</span>
                 </p>
                 <p class="grey-text text-lighten-4">{{site.description}}</p>
+				 <ul class="list-inline text-center">
+                    <!--{% if site.RSS %}
+                    <li>
+                        <a href="{{ "/feed.xml" | prepend: site.baseurl }}">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    {% endif %}
+					-->
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    {% if site.jianshu_username %}
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/28a813aa7ce6">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    {% endif %}
+                    {% if site.twitter_username %}
+                    <li>
+                        <a href="https://twitter.com/{{ site.twitter_username }}">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    {% if site.zhihu_username %}
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/wang-cheng-cheng-39-56">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if site.weibo_username %}
+                    <li>
+                        <a target="_blank" href="http://weibo.com/{{ site.weibo_username }}">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+
+                    {% if site.facebook_username %}
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/{{ site.facebook_username }}">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if site.github_username %}
+                    <li>
+                        <a target="_blank" href="https://github.com/{{ site.github_username }}">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    {% endif %}
+					<!--
+                    {% if site.linkedin_username %}
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/{{ site.linkedin_username }}">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    {% endif %}
+					-->
+                </ul>
+				
+				
+				
+				
+				
+				
+				
+				<!--
 				<p>链接请点击	</p>
 				 <ul class="list-inline text-center" >
-                    
+                    -->
                     <!-- add jianshu add target = "_blank" to <a> by BY -->
-                    
+                    <!--
                             <li style="float: left;">
                                 <a target="_blank" href="https://www.jianshu.com/u/28a813aa7ce6">
                                     <span class="fa-stack fa-lg">
@@ -25,11 +123,11 @@
                                 </a>
                             </li>
 							<li style="float: left;">&nbsp;&nbsp;&nbsp;</li>
-                    
+                    -->
                     
 
                     <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
-                    
+                    <!--
                     <li style="float: left;">
                         <a target="_blank" href="https://www.zhihu.com/people/wang-cheng-cheng-39-56">
                             <span class="fa-stack fa-lg">
@@ -39,7 +137,7 @@
                         </a>
                     </li>
 					<li style="float: left;">&nbsp;&nbsp;&nbsp;</li>
-                    
+                    -->
                     
 					
 
@@ -53,7 +151,7 @@
                         </a>
                     </li>&nbsp;&nbsp;&nbsp;
 					-->
-                    
+                    <!--
                     <li style="float: left;">
                         <a target="_blank" href="https://github.com/EDGorange">
                             <span class="fa-stack fa-lg">
@@ -65,6 +163,7 @@
                     
                     
                 </ul>
+				-->
             </div>
         </div>
     </div>
