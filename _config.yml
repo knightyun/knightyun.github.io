@@ -45,3 +45,7 @@ exclude:
 sass:
   style: "compressed"
 future: "true"
+# SNS Setings
+RSS: false
+weibo_username: "幸福王少"
+jianshu_username: "28a813aa7ce6"
