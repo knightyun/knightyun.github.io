@@ -6,7 +6,7 @@ tags: 建站 论坛 discuz
 excerpt: 关于discuz论坛网站的详细图文搭建教程
 ---
 #### 关于建站
-前面的文章介绍过如何使用Github Pages提供的仓库服务搭建Jekyll个人博客，链接在这 [https://knightyun.github.io/2018/04/01/github-pages-blog](https://knightyun.github.io/2018/04/01/github-pages-blog)，现在来了解一下如何一步步搭建自己的论坛网站。
+前面的文章介绍过如何使用Github Pages提供的仓库服务搭建Jekyll个人博客，链接在这 [https://li-shengming.github.io/home/2018/04/01/github-pages-blog](https://li-shengming.github.io/home/2018/04/01/github-pages-blog)，现在来了解一下如何一步步搭建自己的论坛网站。
 
 搭建个人论坛网站，也相当于建站的一种，通常的套路便是**域名+主机空间+网页源码程序**，网页文件上传到虚拟空间，一般这些空间都安装有网站所需环境，如PHP和数据库等，然后把域名和主机空间绑定，这样就能在浏览器中输入域名（网址）访问所建网页，不然理论上只能通过虚拟主机的IP访问，但是通常有**IP访问限制**不允许你这么做。
 

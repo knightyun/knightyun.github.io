@@ -5,7 +5,7 @@ categories: 网站
 tags: 文章搜索
 excerpt: 为个人博客网站添加文章搜索模块
 ---
-现在很多网站页面里都有搜索模块，包括在线搜索、站内搜索等等，尤其是博客类网站，文章搜索功能就显得比较重要，现在以个人博客网站为例，详细介绍如何给页面添加搜索功能模块，至于如何搭建个人博客网站，可以参考这篇文章：<https://knightyun.github.io/2018/04/01/github-pages-blog>；
+现在很多网站页面里都有搜索模块，包括在线搜索、站内搜索等等，尤其是博客类网站，文章搜索功能就显得比较重要，现在以个人博客网站为例，详细介绍如何给页面添加搜索功能模块，至于如何搭建个人博客网站，可以参考这篇文章：<https://li-shengming.github.io/home/2018/04/01/github-pages-blog>；
 
 #### 功能分析
 为网页添加搜索模块的第三方网站有不少，实现效果也都不错，既然人家都能通过代码实现此功能，与其过度依赖第三方，何不自己研究一下原理自己实现呢*_*；
@@ -23,7 +23,7 @@ excerpt: 为个人博客网站添加文章搜索模块
 
 ![search-box](https://i.loli.net/2019/03/04/5c7cea40495b1.png)
 
-或者在这里：<https://knightyun.github.io/> 预览我的博客的搜索模块的最终实现；
+或者在这里：<https://li-shengming.github.io/home/> 预览我的博客的搜索模块的最终实现；
 
 ##### HTML部分
 即页面样式，组成很简单，即一个文本输入框`<input>`和一个搜索图标，这里图标可以自行搜索下载一个，或者像下面一样使用在线图标，全部代码如下：
@@ -259,4 +259,4 @@ function changeHref(href) {
 看一下最终效果：
 ![final](https://i.loli.net/2019/03/04/5c7d2d2c18d93.png)
 
-或者来我的主页查看：**<https://knightyun.github.io/>**
+或者来我的主页查看：**<https://li-shengming.github.io/home/>**

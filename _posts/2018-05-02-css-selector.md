@@ -6,7 +6,7 @@ tags: css选择器 内联嵌入外部式 ID类选择器区别 伪元素
 excerpt: css选择器详细介绍与举例
 ---
 --------------------
-文章出自个人博客<https://knightyun.github.io/2018/05/02/css-selector>，转载请申明
+文章出自个人博客<https://li-shengming.github.io/home/2018/05/02/css-selector>，转载请申明
 
 ------------------
 #### 目录 <span id="home">
