@@ -16,8 +16,8 @@
 title: 李升明的博客
 description: > # this means to ignore newlines until "baseurl:"
   基于 jekyll 的 Github Pages 个人博客网站，技术的学习、总结、分享与提升
-baseurl: "home"
-url: "https://li-shengming.github.io"
+baseurl: ""
+url: "https://li-shengming.github.io/home"
 permalink: /:year/:month/:day/:title
 repository: home
 paginate: 5
