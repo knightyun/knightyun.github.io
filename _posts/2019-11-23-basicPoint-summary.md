@@ -1,3 +1,11 @@
+---
+title: Java技术体系大纲
+layout: post
+categories: 技术
+tags: 技术弱点
+excerpt: 技术弱点加强
+---
+
 * #Java技术体系大纲
 
    * 虚拟机（支撑Java运行）建立了统一的运行平台（一处编译，到处运行）
