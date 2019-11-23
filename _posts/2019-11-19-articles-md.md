@@ -1,18 +1,18 @@
 ---
-title: Java¼¼ÊõÌåÏµ´ó¸Ù
+title: JavaæŠ€æœ¯ä½“ç³»å¤§çº²
 layout: post
-categories: ¼¼Êõ
+categories: Java
 tags: Technical weakness
-excerpt: ¼¼ÊõÈõµã¼ÓÇ¿
+excerpt: æŠ€æœ¯å¼±ç‚¹åŠ å¼º
 ---
 
-* Java¼¼ÊõÌåÏµ´ó¸Ù
+* JavaæŠ€æœ¯ä½“ç³»å¤§çº²
 
-   * ĞéÄâ»ú£¨Ö§³ÅJavaÔËĞĞ£©½¨Á¢ÁËÍ³Ò»µÄÔËĞĞÆ½Ì¨£¨Ò»´¦±àÒë£¬µ½´¦ÔËĞĞ£©
-   * Java API(Ìá¹©¸÷¿ª·¢ÁìÓò½Ó¿ÚÖ§³Ö)
-   * Java±à³ÌÓïÑÔ
-   * µÚÈı·½Java¿ò¼Ü£¨Spring¡¢StrutsµÈ£©
-# Java¼¼ÊõÌåÏµËù°üº¬µÄÄÚÈİ
-	![Java¼¼ÊõÌåÏµËù°üº¬µÄÄÚÈİ](http://imgsrc.baidu.com/forum/pic/item/ce959422720e0cf38eab06360b46f21fbc09aae2.jpg "Java¼¼Êõ")
-	![ĞéÄâ»ú¼ÓÔØJavaÎÄ¼şµÄ¹ı³Ì](http://photocdn.sohu.com/20151012/Img423027586.jpg "¼ÓÔØJavaÎÄ¼şµÄ¹ı³Ì")
+   * è™šæ‹Ÿæœºï¼ˆæ”¯æ’‘Javaè¿è¡Œï¼‰å»ºç«‹äº†ç»Ÿä¸€çš„è¿è¡Œå¹³å°ï¼ˆä¸€å¤„ç¼–è¯‘ï¼Œåˆ°å¤„è¿è¡Œï¼‰
+   * Java API(æä¾›å„å¼€å‘é¢†åŸŸæ¥å£æ”¯æŒ)
+   * Javaç¼–ç¨‹è¯­è¨€
+   * ç¬¬ä¸‰æ–¹Javaæ¡†æ¶ï¼ˆSpringã€Strutsç­‰ï¼‰
+# JavaæŠ€æœ¯ä½“ç³»æ‰€åŒ…å«çš„å†…å®¹
+	![JavaæŠ€æœ¯ä½“ç³»æ‰€åŒ…å«çš„å†…å®¹](http://imgsrc.baidu.com/forum/pic/item/ce959422720e0cf38eab06360b46f21fbc09aae2.jpg "JavaæŠ€æœ¯")
+	![è™šæ‹ŸæœºåŠ è½½Javaæ–‡ä»¶çš„è¿‡ç¨‹](http://photocdn.sohu.com/20151012/Img423027586.jpg "åŠ è½½Javaæ–‡ä»¶çš„è¿‡ç¨‹")
 	
