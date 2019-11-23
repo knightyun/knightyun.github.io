@@ -2,7 +2,7 @@
 title: Java技术体系大纲
 layout: post
 categories: 技术
-tags: 技术弱点
+tags: Technical weakness
 excerpt: 技术弱点加强
 ---
 
