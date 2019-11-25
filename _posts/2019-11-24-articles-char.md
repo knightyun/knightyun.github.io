@@ -1,21 +1,21 @@
 ---
-title: char�Ļع����ܽ�
+title: char的回顾与总结
 layout: post
 categories: Java
 tags: char
-excerpt: char���ֽ���
+excerpt: char的字节数
 ---
-###�����ֽ������ܽ�
-һ���ֽڣ�byte����8λ��λ����bite����biteָ���Ǽ�����ܹ�ʶ��Ķ����ƣ���0��1���롣����1��bite�ͻ��д洢2�����ͣ�0����1
-###char���ױ�ʾ�����ֽ��أ����Դ洢һ��������
-��ʵchar��ռ���ֽ���������ѡ��ı��뷽ʽ�й�ϵ�ġ�
-��uft8������ռ�����ֽڣ� 
-��GBK������ռ2���ֽڣ� 
-������� char��ʾӢ����ĸ�� 
-��uft8������ռһ���ֽڣ� 
-��GBK�����»���ռ2���ֽڣ� 
-����char���͵�ֵ������Ӣ�Ļ������Ķ���ͳһ�����ֽڣ� 
-������������ԭ������Ϊ����Unicode�������ֽڣ����Ա�ʾ���е��ַ�������һ��char���;Ϳ��Ա�ʾ���еĵ������ַ�����Ҳ������˵��char��������utf8�������ֽ����ǽ���ת���ġ�
-�����������ᵽ��Unicode��GBK��UTF-8��������֮��Ĺ�ϵ��ο�<a href="https://blog.csdn.net/qq_34888036/article/details/81296068" target="blank_">UNICODE,GBK,UTF-8����</a> 
-����һ��˵��byte��Χ��-128��127 ��   char��Χ��0��65535.
+###关于字节数的总结
+一个字节（byte）是8位，位即是bite。而bite指的是计算机能够识别的二进制，即0，1代码。所以1个bite就会有存储2种类型，0或者1
+###char到底表示几个字节呢？可以存储一个汉字吗？
+其实char所占的字节数是与所选择的编码方式有关系的。
+在uft8编码下占三个字节； 
+在GBK编码下占2个字节； 
+但是如果 char表示英文字母： 
+在uft8编码下占一个字节； 
+在GBK编码下还是占2个字节； 
+所以char类型的值不管是英文还是中文都是统一两个字节！ 
+可能这样做的原因是因为采用Unicode（两个字节）可以表示所有的字符，这样一个char类型就可以表示所有的单个“字符”，也就是所说的char。而对于utf8编码下字节数是进行转换的。
+这里我们有提到了Unicode、GBK、UTF-8关于他们之间的关系请参考<a href="https://blog.csdn.net/qq_34888036/article/details/81296068" target="blank_">UNICODE,GBK,UTF-8区别</a> 
+所以一般说的byte范围是-128到127,char范围是0到65535.
 
