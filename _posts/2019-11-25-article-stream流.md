@@ -12,7 +12,7 @@ excerpt: stream流的学习
 
 如需参考文档请点击下载：[参考文档](/assets/stream流/笔记.rtf)  
 单列集合获取stream的方式:
-```
+```java
 Stream<E> stream = list.stream()
 Stream<E> stream = set.stream()
 Stream<E> stream = list.stream()
