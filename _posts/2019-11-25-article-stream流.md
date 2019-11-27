@@ -76,9 +76,13 @@ Strema的合并方法：public static <T> Stream<T> concat(Stream<? extends T> a
 ---------------------------------------------------------------------
 
 将Stream中的数据转换为集合、数组的方法：
+
 `Stream<String> s1 = Stream.of("a","b","c","d")`
+
 `List<String> list = s1.collect(Collectors.toList)`
+
 `Set<String> set = s1.collect(Collectors.toSet)`
+
 `Object[] obj = s1.toArray()`
 
 
