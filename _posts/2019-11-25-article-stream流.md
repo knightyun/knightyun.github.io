@@ -12,10 +12,10 @@ excerpt: stream流的学习
 
 如需参考文档请点击下载：[参考文档](/assets/stream流/笔记.rtf)  
 单列集合获取stream的方式:
-’Stream<E> stream = list.stream()’
-'Stream<E> stream = set.stream()'
-'Stream<E> stream = list.stream()'
-’‘’
+```
+Stream<E> stream = list.stream()
+Stream<E> stream = set.stream()
+Stream<E> stream = list.stream()
 //List获取Stream的方式
 List<String> list = new ArrayList<>();
 Stream<String> stream = list.stream();
@@ -30,7 +30,7 @@ Stream<String> stream2 = set1.stream();
 Stream<Integer> stream3 = Stream.of(1,2,3,3,4,5);
 Integer[] integers = {1,2,2,2,3,3};
 Stream<Integer> stream4 = Stream.of(integers);
-‘’‘
+```
   
 ---------------------------------------------------------------------
   
