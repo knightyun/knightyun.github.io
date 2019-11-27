@@ -7,27 +7,29 @@ excerpt: stream流的学习
 ---
 #### 什么是stream流？
 ##### stream流是一种对集合操作的工具类
+<center>
 首先先了解下stream的类结构关系：![stream的类结构图](/assets/stream流/stream类结构图.PNG)
+</center>
 如需参考文档请点击下载：[参考文档](/assets/stream流/笔记.rtf)
 单列集合获取stream的方式:
 'Stream<E> stream = list.stream()'
 'Stream<E> stream = set.stream()'
 'Stream<E> stream = list.stream()'
 '''
-	    //List获取Stream的方式
-        List<String> list = new ArrayList<>();
-        Stream<String> stream = list.stream();
-        //Set获取Stream的方式
-        Set<String> set = new HashSet<>();
-        Stream<String> stream1 = set.stream();
-        //Map获取Stream的方式
-        Map<String,String> map = new HashMap<String,String>();
-        Set<String> set1 = map.keySet();
-        Stream<String> stream2 = set1.stream();
-        //数组获取stream的方式
-        Stream<Integer> stream3 = Stream.of(1,2,3,3,4,5);
-        Integer[] integers = {1,2,2,2,3,3};
-        Stream<Integer> stream4 = Stream.of(integers);
+//List获取Stream的方式
+List<String> list = new ArrayList<>();
+Stream<String> stream = list.stream();
+//Set获取Stream的方式
+Set<String> set = new HashSet<>();
+Stream<String> stream1 = set.stream();
+//Map获取Stream的方式
+Map<String,String> map = new HashMap<String,String>();
+Set<String> set1 = map.keySet();
+Stream<String> stream2 = set1.stream();
+//数组获取stream的方式
+Stream<Integer> stream3 = Stream.of(1,2,3,3,4,5);
+Integer[] integers = {1,2,2,2,3,3};
+Stream<Integer> stream4 = Stream.of(integers);
 '''
 ---------------------------------------------------------------------
 Stream的过滤的方法：Stream<T> filter(Predicate<? super T> predicate); 
