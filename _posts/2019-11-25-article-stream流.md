@@ -35,40 +35,50 @@ Stream<Integer> stream4 = Stream.of(integers);
 ---------------------------------------------------------------------
   
 Stream的过滤的方法：Stream<T> filter(Predicate<? super T> predicate); 
+
 Predicate函数式接口的抽象方法是：  boolean test(T t);
+
 使用：stream.filter((s)->s.startsWith("张"));
 ---------------------------------------------------------------------
 
 Stream的foreach的方法：void forEach(Consumer<? super T> action);
+
 Consumer函数式接口的抽象方法是：    void accept(T t);
+
 使用：stream.forEach(System.out::println);
 ---------------------------------------------------------------------
 
 Stream的统计个数的方法：long count();
+
 使用：long count = stream.count();
 ---------------------------------------------------------------------
 
 Stream的取用前几个的方法：Stream<T> limit(long maxSize);
+  
 使用：stream.limit(2);
 ---------------------------------------------------------------------
   
 Stream跳过前几个的方法：Stream<T> skip(long n);
+  
 使用：Stream<String> skip = stream.skip(2);
 ---------------------------------------------------------------------
   
 Stream的转换方法：    <R> Stream<R> map(Function<? super T, ? extends R> mapper);
+
 Function的函数式接口的抽象方法是：	R apply(T t);
+
 使用：Stream<Integer> integerStream = stream.map(Integer::parseInt);
 ---------------------------------------------------------------------
 
 Strema的合并方法：public static <T> Stream<T> concat(Stream<? extends T> a, Stream<? extends T> b)
+
 使用：Stream<Integer> concat = Stream.concat(stream3, stream4);
 ---------------------------------------------------------------------
 
 将Stream中的数据转换为集合、数组的方法：
-'Stream<String> s1 = Stream.of("a","b","c","d")'
-'List<String> list = s1.collect(Collectors.toList)'
-'Set<String> set = s1.collect(Collectors.toSet)'
-'Object[] obj = s1.toArray()'
+`Stream<String> s1 = Stream.of("a","b","c","d")`
+`List<String> list = s1.collect(Collectors.toList)`
+`Set<String> set = s1.collect(Collectors.toSet)`
+`Object[] obj = s1.toArray()`
 
 
