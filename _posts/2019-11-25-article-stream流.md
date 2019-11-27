@@ -6,9 +6,11 @@ tags: stream流
 excerpt: stream流的学习
 ---
 #### 什么是stream流？
-##### stream流是一种对集合操作的工具类
+##### stream流是一种对集合操作的工具类  
+
 首先先了解下stream的类结构关系：![stream的类结构图](/assets/stream流/stream类结构图.PNG)
-如需参考文档请点击下载：[参考文档](/assets/stream流/笔记.rtf)
+
+如需参考文档请点击下载：[参考文档](/assets/stream流/笔记.rtf)  
 单列集合获取stream的方式:
 'Stream<E> stream = list.stream()'
 'Stream<E> stream = set.stream()'
