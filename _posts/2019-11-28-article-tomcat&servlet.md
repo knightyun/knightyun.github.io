@@ -32,8 +32,8 @@ servlet是sever和applet这两个单词掐头去尾得到的，servlet就是服�
 servlet3.0可以不用配置web.xml，使用@webServlet注解来实现，使用方法为：@webServlet(urlPatterns={"/myServlet1","myServlet2"})  
 
 servlet的类结构图请参考：[servlet的类结构图](/assets/servlet&tomcat/servlet类结构图.PNG)  
-
-servlet是单例模式，采用懒汉模式，它是单实例，多线程的。init()只初始化一次(默认第一次被访问的时候执行)，service()访问的时候执行(每一次访问都执行)，destry()正常关闭服务器的时候(只销毁一次)。  
+---
+***servlet是单例模式，采用懒汉模式，它是单实例，多线程的。init()只初始化一次(默认第一次被访问的时候执行)，service()访问的时候执行(每一次访问都执行)，destry()正常关闭服务器的时候(只销毁一次)。***     
 ----------------------------------------------------------------------------------------------------------
 请求和响应是HttpServlet(HttpServletRequest,HttpServletResponse)中最重要的两个参数,他们两个是由Tomcat生成的，主要用来作http协议的参数，其中我们需要注意的一个地方是：当浏览器发送请求的时候会通过http协议来传递参数到服务器，而http协议默认的字符编码是ISO8859-1,而默认情况下Tomcat有对get请求作字符处理，   
 所以我们需要对post请求的字符编码手动处理，通常我们会采用`request.setCharacterEncoding("utf-8");``response.setContentType("text/html;charset=utf-8");`这种方式处理字符编码问题。   
