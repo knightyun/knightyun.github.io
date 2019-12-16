@@ -16,87 +16,15 @@ cookie:
    3.一个网站最多支持20个cookie   
    4.一个浏览器最多支持300个cookie   
 session:   
-   1:session是用来在服务器端存储数据的技术        
-#####
-测试代码：用完即删 
-`package com.aia.dao.impl;
+   1:session是用来在服务器端存储数据的技术   
+   2：session是的底层是cookie，所以可以持久化    3：session的是requst.getSession()创建，销毁有三种：第一种Tomcat默认30分钟；第二种手动调用invalidate()销毁；第三种浏览器非正常关闭。   
+   
+#####域对象：在一定范围内可以共享数据   
+   1.requst：一次请求，多个资源，共享数据；   
+   2.session：默认一次会话，多个请求，多个资源，共享数据；   
+   3.sevletContext：一个项目，多个会话，多个请求，共享同一份数据；   
+   
 
-import com.aia.dao.UserDao;
-import com.aia.pojo.Properties;
-import com.aia.pojo.User;
-import com.alibaba.druid.pool.DruidDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
-
-
-import javax.sql.DataSource;
-import java.sql.ResultSet;
-
-@Repository
-public class UserDaoImpl implements UserDao {
-    @Autowired
-    private JdbcTemplate jdbctemplate;
-
-
-    @Override
-    public User selectUser() {
-        User user = new User();
-        return jdbctemplate.queryForObject("select * from user", (ResultSet resultSet, int i) -> {
-            user.setUsername(resultSet.getString("username"));
-            user.setPassword(resultSet.getString("password"));
-            return user;
-        });
-    }
-
-    public Properties getProperties(int key){
-        Properties properties = new Properties();
-        return jdbctemplate.queryForObject("select * from properties",(ResultSet resultSet, int i) -> {
-            properties.setUrl(resultSet.getString("url"));
-            properties.setDriverClassName(resultSet.getString("driverClassName"));
-            properties.setUsername(resultSet.getString("username"));
-            properties.setPassword(resultSet.getString("password"));
-            return properties;
-
-    });
-
-    }
-    public DataSource getDataSource(Properties properties){
-        DruidDataSource druidDataSource = new DruidDataSource();
-        druidDataSource.setUrl(properties.getUrl());
-        druidDataSource.setDriverClassName(properties.getDriverClassName());
-        druidDataSource.setUsername(properties.getUsername());
-        druidDataSource.setPassword(properties.getPassword());
-        return druidDataSource;
-    }
-    public void test(){
-
-        jdbctemplate.setDataSource(getDataSource(getProperties(1)));
-    }
-    @Override
-    public User getUserBySecondDataSource(){
-
-        test();
-        User user = new User();
-        return jdbctemplate.queryForObject("select * from user", (ResultSet resultSet, int i) -> {
-            user.setUsername(resultSet.getString("username"));
-            user.setPassword(resultSet.getString("password"));
-            return user;
-        });
-    }
-
-}
-`
-`      <dependency>
-
-          <groupId>com.alibaba</groupId>
-
-          <artifactId>druid</artifactId>
-
-          <version>1.1.6</version>
-
-      </dependency>
-`   
 	
 
    
