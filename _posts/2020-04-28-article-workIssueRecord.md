@@ -15,8 +15,8 @@ java -Djava.ext.dirs=./plugins:${JAVA_HOME}/lib/ext/ -jar app.jar
 4. sqlsever中的触发器:分为2种。   
 `instead of 触发器:在数据更新到数据库之前执行的操作   
 `after(for)触发器：在数据更新到数据后再执行的操作   
-5:\t表示缩进一个tab;\n表示换行(enter)      
-6:	SET @sql = N'...'这里的N表示使用unicode编码。   
-7：	EXEC sp_executesql @sql;执行sql语句的命令。这里的@sql必须以N开头否则报错.
+5. \t表示缩进一个tab;\n表示换行(enter)      
+6. SET @sql = N'...'这里的N表示使用unicode编码。   
+7. EXEC sp_executesql @sql;执行sql语句的命令。这里的@sql必须以N开头否则报错.
 
 
