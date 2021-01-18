@@ -17,29 +17,31 @@ excerpt: 面试
 	虽然jvm中的程序计数器并不像汇编语言中的程序计数器一样是物理概念上的CPU寄存器，但是jvm中的程序计数器的功能跟汇编语言中的程序计数器的功能在逻辑上是等同的，也就是说是用来只是执行那条指令的。
 	由于在jvm中，多线程是通过线程轮流切换来获得CPU执行时间的，因此，在任一具体时刻，一个CPU的内核只会执行一条线程中的指令。因此，为了能够使得每个线程都在线程切换后能够恢复在切换之前的程序执行位置，每个线程都需要有自己独立的程序计数器，并且不能互相被干扰，否则就会影响到程序的正常执行次序。因此，可以这么说，程序计数器是每个线程所私有的。
 	在jvm规范中规定，如果线程执行的是非native方法，则程序计数器中保存的是当前需要执行的的指令地址；如果线程执行的是native方法，则程序计数器中的值是undefined。
-	由于程序计数器中存储的数据所占空间大小不会随程序的执行而发生改变，因此，对于程序计数器是不会发生内存溢出现象（OutofMemory）的。
+	由于程序计数器中存储的数据所占空间大小不会随程序的执行而发生改变，因此，对于程序计数器是不会发生内存溢出现象（OutofMemory）的。   
    3.2 java栈
 	java栈也称作虚拟机栈（Java Vitual Machine Stack），也就是我们常常所说的栈。跟C语言的数据段中栈类似，事实上，java栈是java方法执行的内存模型。为什么这么说呢？下面我们就来解释一下其中的原因。
 	JAVA栈中存放的是一个个的栈帧，每个栈帧对应一个被调用的方法，在栈帧中包括局部变量表（Local Variables）、操作数栈（Operand Stack）、指向当前方法所属的类的运行时常量池的引用、方法返回地址（Return Address）和一些额外的附加信息。当线程执行一个方法时，就会随之创建一个对应的栈帧，并将建立的栈帧压栈。当方法执行完毕之后，便会将栈帧出栈。
 	因此可知，线程当前执行的方法所对应的栈帧必定位于java栈的顶部。讲到这里
 	大家就应该会明白为什么 在 使用 递归方法的时候容易导致栈内存溢出的现象了以及为什么栈区的空间不用程序员去管理了（当然在Java中，程序员基本不用关系到内存分配和释放的事情，因为Java有自己的垃圾回收机制），这部分空间的分配和释放都是由系统自动实施的。对于所有的程序设计语言来说，栈这部分空间对程序员来说是不透明的。下图表示了一个Java栈的模型：
-	>> <https://mp.weixin.qq.com/s?__biz=MzI4Njc5NjM1NQ==&mid=2247484719&idx=1&sn=c0f3a3d518dd89a08acad5f0ef0cdca6&scene=19&key=2360adfbb4382791242e50e31716b27a3af2c36e198d4a5999d2fc952cfbce6add55b0fcbaa6971f168845fa247c2304d894734400cec9929e3852de9f4c518312f9818c0983a84d0245f9d593a5a4f5&ascene=7&uin=MjMyNTI1MzcyMA%3D%3D&devicetype=Windows+10&version=6206034e&lang=zh_CN&pass_ticket=6TfnEKDyiyyDwPWc6ACJrWHdaNJRVp1WYWaxXF31sHa3P%2Fa5gZdEqNym%2BfuAEiKE&winzoom=1> 
+	>> <https://mp.weixin.qq.com/s?__biz=MzI4Njc5NjM1NQ==&mid=2247484719&idx=1&sn=c0f3a3d518dd89a08acad5f0ef0cdca6&scene=19&key=2360adfbb4382791242e50e31716b27a3af2c36e198d4a5999d2fc952cfbce6add55b0fcbaa6971f168845fa247c2304d894734400cec9929e3852de9f4c518312f9818c0983a84d0245f9d593a5a4f5&ascene=7&uin=MjMyNTI1MzcyMA%3D%3D&devicetype=Windows+10&version=6206034e&lang=zh_CN&pass_ticket=6TfnEKDyiyyDwPWc6ACJrWHdaNJRVp1WYWaxXF31sHa3P%2Fa5gZdEqNym%2BfuAEiKE&winzoom=1>    
+	
 	局部变量表，顾名思义，想必不用解释大家应该明白它的作用了吧。就是用来存储方法中的局部变量（包括在方法中声明的非静态变量以及函数形参）。对于基本数据类型的变量，则直接存储它的值，对于引用类型的变量，则存的是指向对象的引用。局部变量表的大小在编译器就可以确定其大小了，因此在程序执行期间局部变量表的大小是不会改变的。
 	操作数栈，想必学过数据结构中的栈的朋友想必对表达式求值问题不会陌生，栈最典型的一个应用就是用来对表达式求值。想想一个线程执行方法的过程中，实际上就是不断执行语句的过程，而归根到底就是进行计算的过程。因此可以这么说，程序中的所有计算过程都是在借助于操作数栈来完成的。
 	指向运行时常量池的引用，因为在方法执行的过程中有可能需要用到类中的常量，所以必须要有一个引用指向运行时常量。
 	方法返回地址，当一个方法执行完毕之后，要返回之前调用它的地方，因此在栈帧中必须保存一个方法返回地址。
-	由于每个线程正在执行的方法可能不同，因此每个线程都会有一个自己的Java栈，互不干扰。
+	由于每个线程正在执行的方法可能不同，因此每个线程都会有一个自己的Java栈，互不干扰。   
    3.3 本地方法栈
-	本地方法栈与Java栈的作用和原理非常相似。区别只不过是Java栈是为执行Java方法服务的，而本地方法栈则是为执行本地方法（Native Method）服务的。在JVM规范中，并没有对本地方发展的具体实现方法以及数据结构作强制规定，虚拟机可以自由实现它。在HotSopt虚拟机中直接就把本地方法栈和Java栈合二为一。
+	本地方法栈与Java栈的作用和原理非常相似。区别只不过是Java栈是为执行Java方法服务的，而本地方法栈则是为执行本地方法（Native Method）服务的。在JVM规范中，并没有对本地方发展的具体实现方法以及数据结构作强制规定，虚拟机可以自由实现它。在HotSopt虚拟机中直接就把本地方法栈和Java栈合二为一。   
    3.4 .堆
 	在C语言中，堆这部分空间是唯一一个程序员可以管理的内存区域。程序员可以通过malloc函数和free函数在堆上申请和释放空间。那么在Java中是怎么样的呢？
-	Java中的堆是用来存储对象本身的以及数组（当然，数组引用是存放在Java栈中的）。只不过和C语言中的不同，在Java中，程序员基本不用去关心空间释放的问题，Java的垃圾回收机制会自动进行处理。因此这部分空间也是Java垃圾收集器管理的主要区域。另外，堆是被所有线程共享的，在JVM中只有一个堆。
+	Java中的堆是用来存储对象本身的以及数组（当然，数组引用是存放在Java栈中的）。只不过和C语言中的不同，在Java中，程序员基本不用去关心空间释放的问题，Java的垃圾回收机制会自动进行处理。因此这部分空间也是Java垃圾收集器管理的主要区域。另外，堆是被所有线程共享的，在JVM中只有一个堆。   
    3.5 方法区
 	方法区在JVM中也是一个非常重要的区域，它与堆一样，是被线程共享的区域。在方法区中，存储了每个类的信息（包括类的名称、方法信息、字段信息）、静态变量、常量以及编译器编译后的代码等。
 	在Class文件中除了类的字段、方法、接口等描述信息外，还有一项信息是常量池，用来存储编译期间生成的字面量和符号引用。
 	在方法区中有一个非常重要的部分就是运行时常量池，它是每一个类或接口的常量池的运行时表示形式，在类和接口被加载到JVM后，对应的运行时常量池就被创建出来。当然并非Class文件常量池中的内容才能进入运行时常量池，在运行期间也可将新的常量放入运行时常量池中，比如String的intern方法。
-	在JVM规范中，没有强制要求方法区必须实现垃圾回收。很多人习惯将方法区称为“永久代”，是因为HotSpot虚拟机以永久代来实现方法区，从而JVM的垃圾收集器可以像管理堆区一样管理这部分区域，从而不需要专门为这部分设计垃圾回收机制。不过自从JDK7之后，Hotspot虚拟机便将运行时常量池从永久代移除了。
-	>> <https://mp.weixin.qq.com/s?__biz=MzI4Njc5NjM1NQ==&mid=2247484719&idx=1&sn=c0f3a3d518dd89a08acad5f0ef0cdca6&scene=19&key=2360adfbb4382791242e50e31716b27a3af2c36e198d4a5999d2fc952cfbce6add55b0fcbaa6971f168845fa247c2304d894734400cec9929e3852de9f4c518312f9818c0983a84d0245f9d593a5a4f5&ascene=7&uin=MjMyNTI1MzcyMA%3D%3D&devicetype=Windows+10&version=6206034e&lang=zh_CN&pass_ticket=6TfnEKDyiyyDwPWc6ACJrWHdaNJRVp1WYWaxXF31sHa3P%2Fa5gZdEqNym%2BfuAEiKE&winzoom=1> 
+	在JVM规范中，没有强制要求方法区必须实现垃圾回收。很多人习惯将方法区称为“永久代”，是因为HotSpot虚拟机以永久代来实现方法区，从而JVM的垃圾收集器可以像管理堆区一样管理这部分区域，从而不需要专门为这部分设计垃圾回收机制。不过自从JDK7之后，Hotspot虚拟机便将运行时常量池从永久代移除了。   
+	>> <https://mp.weixin.qq.com/s?__biz=MzI4Njc5NjM1NQ==&mid=2247484719&idx=1&sn=c0f3a3d518dd89a08acad5f0ef0cdca6&scene=19&key=2360adfbb4382791242e50e31716b27a3af2c36e198d4a5999d2fc952cfbce6add55b0fcbaa6971f168845fa247c2304d894734400cec9929e3852de9f4c518312f9818c0983a84d0245f9d593a5a4f5&ascene=7&uin=MjMyNTI1MzcyMA%3D%3D&devicetype=Windows+10&version=6206034e&lang=zh_CN&pass_ticket=6TfnEKDyiyyDwPWc6ACJrWHdaNJRVp1WYWaxXF31sHa3P%2Fa5gZdEqNym%2BfuAEiKE&winzoom=1>   
+	
 4. 总结	
 	1 ：基础数据类型直接在栈空间分配；
 	2 ：方法的形式参数，直接在栈空间分配，当方法调用完成后从栈空间回收；
@@ -49,8 +51,9 @@ excerpt: 面试
 	6 ：方法调用时传入的实际参数，现在栈空间分配，在方法调用完成后从栈空间释放；
 	7 ：字符创常量在DATA区域分配，this在堆空间分配；
     8 ：数组既在栈空间分配数组名称，又在堆空间分配数组实际的大小。
-5. JVM参数知一二   
->> [jvm常用参数](https://blog.csdn.net/wang379275614/article/details/78471604)
+5. JVM参数知一二      
+>> [jvm常用参数](https://blog.csdn.net/wang379275614/article/details/78471604)   
+
 6. 垃圾回收   
    6.1 如何确定某个对象是“垃圾”？
 在这一小节我们先了解一个最基本的问题：如果确定某个对象是“垃圾”？既然垃圾收集器的任务是回收垃圾对象所占的空间供新的对象使用，那么垃圾收集器如何确定某个对象是“垃圾”？—即通过什么方法判断一个对象可以被回收了。
@@ -159,9 +162,10 @@ byte[] data = new byte[4*1024*1024]
 参考资料：
 《深入理解Java虚拟机》
 
->> 来自 <https://blog.csdn.net/u013835855/article/details/78908714> 
-7. JVM调优
->>> [JVM调优参考](https://www.cnblogs.com/andy-zhou/p/5327288.html)
+>> 来自 <https://blog.csdn.net/u013835855/article/details/78908714>   
+ 
+7. JVM调优   
+>>> [JVM调优参考](https://www.cnblogs.com/andy-zhou/p/5327288.html)   
 
 
 
