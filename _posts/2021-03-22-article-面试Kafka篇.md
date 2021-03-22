@@ -1,11 +1,12 @@
 
 ---
-title: 面试Kafka篇
+title: 面试kafka篇
 layout: post
 categories: 面试
 tags: 面试
 excerpt: 面试
 ---
+
 ##### 什么是Kafka？
 Kafka是分布式发布-订阅消息系统，它最初是由LinkedIn公司开发的，之后成为Apache项目的一部分，Kafka是一个分布式，可划分的，冗余备份的持久性的日志服务，它主要用于处理流式数据。   
 ##### Kafka中的ISR、AR又代表什么？ISR的伸缩又指什么
