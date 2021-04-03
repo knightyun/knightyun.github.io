@@ -49,7 +49,7 @@ mvn clean install -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.al
 
 3. 关于使用阿里云镜像的问题，为什么有的是镜像是http？有的是https？到底在改为https后如何正确配置idea的vm参数才可以正常下载依赖呢？   
 之前的镜像配置一直是http协议，再后来阿里使用了https，所以我们现在应该使用的是https的镜像才可以正常访问maven仓库，但是在 一些idea中配置完maven的仓库后还是不能正常下载依赖，这是因为https是需要配置ssl证书的，然而之前有配置过ssl证书但最终发现是无效的，具体的原因没有细究，因为我们也可以换一种思路就是通过配置一些vm的参数来避开ssl，我们可以在idea中通过设置：   
-[maven配置忽略SSL证书](/assets/maven配置忽略SSl证书.png)   
+![maven配置忽略SSL证书](/assets/maven配置忽略SSl证书.png)   
 
    
 
