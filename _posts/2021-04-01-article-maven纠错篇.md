@@ -27,6 +27,8 @@ excerpt: maven
 1. 旧版网址。那如何查看最新的网址呢？请直接点击上面提供的官方链接查看即可！   
 2. 多个mirror组合。 其实是因为我们不理解  <mirrorOf>*</mirrorOf>这里的*的含义。我通过查看官方文档以及作了一些测试发现，其实这里的*基本以及可以覆盖我们常用的阿里云云效所提供的的仓库了，给出官方文档链接：[seeting.xml文档解析](https://maven.apache.org/guides/mini/guide-mirror-settings.html)
 总结： 正确的配置方式只有一种:    
+
+   
 ```
 <mirror>
   <id>aliyunmaven</id>
