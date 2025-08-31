@@ -1,38 +1,42 @@
-{% assign sorted_repos = (site.github.public_repositories | sort: 'stargazers_count') | reverse  %}
+{% if site.github.public_repositories %}
+{% assign sorted_repos = (site.github.public_repositories | sort: 'updated_at') | reverse %}
 <div class="col s12 switch">
-  <label>
-    Show forked projects
-    <input class="fork-switch" type="checkbox" checked="1" onchange="toggleForked()">
-    <span class="lever"></span>
-  </label>
+    <label class="black-text">
+        Show forked projects
+        <input class="fork-switch" onchange="toggleForked()" type="checkbox">
+        <span class="lever"></span>
+    </label>
 </div>
+
 {% for repo in sorted_repos %}
-<div class="col s12 m6 l4" {% if repo.fork %}id="forked"{% endif %}>
-  <div class="card hoverable">
-    <div class="card-image waves-effect waves-block waves-light geopattern activator" data-pattern-id="{{repo.name}}">
-      <i class="material-icons waves-effect waves-block waves-light">more_vert</i>
-      <a class="card-title center-align valign-wrapper" href="{{repo.html_url}}" target="_blank">{{repo.name}}</a>
+<div class="col s12 m6 l4" {% if repo.fork %} id="forked" {% endif %}>
+    <div class="card hoverable">
+        <div class="card-image waves-effect waves-block waves-light geopattern activator" data-pattern-id="{{repo.name}}">
+            <i class="material-icons waves-effect waves-block waves-light">more_vert</i>
+            <a class="card-title center-align valign-wrapper" href="{{repo.html_url}}" target="_blank">{{repo.name}}</a>
+        </div>
+        <div class="card-content valign-wrapper center-align activator">
+            <span class="activator grey-text text-darken-1">{{repo.description}}</span>
+        </div>
+        <div class="card-reveal">
+            <div class="card-reveal-content">
+                <span class="card-title grey-text text-darken-4">Statistics<i class="material-icons right">close</i>
+                </span>
+                <span class="tooltipped" data-position="bottom" data-delay="30" data-tooltip="{{repo.stargazers_count}} stars">
+                    <i class="material-icons">star</i>
+                    {{repo.stargazers_count}}
+                </span>
+                <span class="tooltipped" data-position="bottom" data-delay="30" data-tooltip="{{repo.forks_count}} forks">
+                    <i class="material-icons">call_split</i>
+                    {{repo.forks_count}}
+                </span>
+                <span class="tooltipped" data-delay="30" data-position="bottom" data-tooltip="Last updated：{{repo.updated_at}}">
+                    <i class="material-icons">access_time</i>
+                    <time datetime="{{repo.updated_at}}" title="{{repo.updated_at}}">{{repo.updated_at | date: '%Y-%m-%d'}}</time>
+                </span>
+            </div>
+        </div>
     </div>
-    <div class="card-content valign-wrapper center-align activator">
-      <span class="activator grey-text text-darken-1">{{repo.description}}</span>
-    </div>
-    <div class="card-reveal">
-      <div class="card-reveal-content">
-        <span class="card-title grey-text text-darken-4">Statistics<i class="material-icons right">close</i></span>
-        <span class="tooltipped" data-position="bottom" data-delay="30" data-tooltip="{{repo.stargazers_count}} stars">
-          <i class="material-icons">star</i>
-          {{repo.stargazers_count}}
-        </span>
-        <span class="tooltipped" data-position="bottom" data-delay="30" data-tooltip="{{repo.forks_count}} forks">
-          <i class="material-icons">call_split</i>
-          {{repo.forks_count}}
-        </span>
-        <span class="tooltipped" data-position="bottom" data-delay="30" data-tooltip="Last updated：{{repo.updated_at}}">
-          <i class="material-icons">access_time</i>
-          <time datetime="{{repo.updated_at}}" title="{{repo.updated_at}}">{{repo.updated_at | date: '%Y-%m-%d'}}</time>
-        </span>
-      </div>
-    </div>
-  </div>
 </div>
 {% endfor %}
+{% endif %}

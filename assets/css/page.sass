@@ -1,11 +1,262 @@
 ---
 ---
+body
+  font-family: auto
+  display: flex
+  min-height: 100vh
+  flex-direction: column
+  background-color: #f2f2f2
+  h1, h2, h3, h4, h5, h6
+    font-weight: bold
+  h1
+    font-size: 2rem
+  h2
+    font-size: 1.6rem
+  h3
+    font-size: 1.4rem
+  h4
+    font-size: 1.3rem
+  h5
+    font-size: 1.2rem
+  h6
+    font-size: 1.1rem
+
+a
+  color: #3cf
+  &:hover
+    text-decoration: underline
+  &:active
+    text-decoration: underline
+  &.top-nav
+    position: absolute
+    float: none
+    color: #fff
+    font-size: 36px
+    line-height: 80px
+    text-align: center
+    height: 48px
+    width: 48px
+    top: 1rem
+    z-index: 999
+
+// PC
+header, main, footer
+  padding-left: 300px
+
+.container
+  width: 90%
+
+header
+  height: 200px
+  #slide-out
+    background: #eee !important
+  a:hover
+    text-decoration: none
+  .userView
+    position: relative
+    overflow: hidden
+    .user-bg
+      float: left
+      width: 100%
+    .user-avatar
+      position: absolute
+      top: 32px
+      left: 32px
+    .user-info
+      position: absolute
+      bottom: 10px
+      left: 32px
+      line-height: initial
+    .circle
+      border-style: solid
+      border-color: #009688
+      border-width: 3px
+  .ad
+    position: relative
+    a
+      img
+        width: 100%
+    i
+      position: absolute
+      top: 0
+      right: 10px
+      cursor: pointer
+
+  nav
+    &.top-nav
+      position: relative
+      height: 280px
+      background: -webkit-linear-gradient(-30deg, #3AA17E 30%, #00537E 60%)
+      background: linear-gradient(120deg, #3AA17E 10%, #00537E 90%)
+      .particles-wrapper
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+    .page-title
+      display: inline-block
+      font-size: 36px
+      font-weight: bold
+      line-height: 80px
+      margin-top: 1em
+      font-family: cursive
+    .head-message
+      margin: 0
+      font-size: 32px
+      font-weight: bold
+      font-style: italic
+      font-family: cursive
+    .nav-wrapper
+      height: 60%
+      .container
+        position: relative
+        .github-btns
+          position: absolute
+          top: 0
+          right: 0
+          width: 100%
+          text-align: right
+
 main
+  flex: 1 0 auto
+  z-index: 1
   div
     .row
-      margin-top: 20px
+      margin-top: 32px
+  ul
+    &:not(.browser-default)
+      padding-left: 40px
+      li
+        list-style-type: disc
+  #page-info
+    .page-title
+      text-shadow: #333 3px 3px 3px
 
-#page-info
-  h3
+  // 评论插件
+  .comments
+    margin-bottom: 3em
+    border-radius: .5em
+    background: #fefefe
+    box-shadow: 0 0 10px 0 #ccc
+    .vheader.item3
+      display: flex
+      flex-wrap: wrap
+      input
+        padding-top: 0
+        padding-bottom: 0
+        margin: 0 5px
+        flex-basis: 200px
+        flex-grow: 1
+        border-bottom: 1px solid #ccc !important
+      input::-webkit-input-placeholder
+        color: #aaa
+    .vsubmit.vbtn
+      font-size: 1em
+      width: 6em
+      color: #f2f2f2
+      background: #3AA17E
+    .vsubmit.vbtn:hover
+      color: white
+    .txt-right
+      display: none
+
+footer
+  margin-top: 10px
+  .search
+    display: none
+    position: absolute
+    top: 168px
+    right: 0
+    width: 100%
+    height: 30px
+    text-align: right
+    line-height: 30px
+    padding-right: 10px
+    z-index: 1
+    .search-icon
+      float: right
+      height: 100%
+      margin: 0 10px
+      line-height: 30px
+      cursor: pointer
+      user-select: none
+    .search-input
+      float: right
+      width: 30%
+      height: 30px
+      line-height: 30px
+      margin: 0
+      padding-left: 10px
+      border: 2px solid #ddd
+      border-radius: 10px
+      box-sizing: border-box
+      color: white
+    .search-clear
+      display: none
+    .search-results
+      display: none
+      position: absolute
+      top: 30px
+      right: 50px
+      width: 40%
+      max-height: 60vh
+      padding: .5em 1.5em
+      overflow: auto
+      text-align: left
+      border-radius: 5px
+      background: #f2f2f2
+      .result-title
+        color: black
+      .result-item
+        .result-item-title
+          padding: 10px
+          color: black
+          font-weight: bold
+          &::before
+            content: "《"
+          &::after
+            content: "》"
+        .result-item-detail
+          a
+            text-transform: none !important
+
+  .row
+    margin-bottom: 0px
+  .footer-message
+    font-family: cursive
+    font-size: 1.6rem
     font-weight: bold
-    margin-bottom: 5px
+    margin: 0
+  .visit-statistics
+    margin-top: 5px
+
+// Valine
+.v[data-class=v] .vcards
+  padding: 0 1em 0
+
+// Tablet
+@media only screen and (max-width: 992px)
+  header, main, footer
+    padding-left: 0
+  nav.top-nav
+    .nav-wrapper
+      text-align: center
+// Phone
+@media only screen and (max-width: 600px)
+  nav.top-nav
+    .nav-wrapper
+      .github-btns
+        text-align: center
+        iframe
+          width: 30%
+      .page-title
+        font-size: 20px
+      .head-message
+        font-size: 24px
+  footer
+    .search
+      .search-input
+        width: 80%
+      .search-results
+        width: 80%

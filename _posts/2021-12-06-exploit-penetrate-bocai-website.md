@@ -1,0 +1,423 @@
+---
+title: 后记：菠菜站点的攻克之旅
+layout: post
+categories: Exploit
+tags: exploit hack 渗透 安全
+excerpt: 远离套路，远离损失
+---
+
+故事发生在上次事件（<https://knightyun.github.io/2021/09/04/exploit-take-down-swindle-website>）之后，算是作为一个收尾，但也算是另一个开始 (⌐■_■)，顺便记录下相关操作；
+
+
+## 前情提要
+
+上回故事说到，骗子服务器的最高权限虽然已经拿到，但这也只是技术层面的掌控，想要立案，需要提供尽量多的人员相关信息，如手机、银行卡等，但这些目前都并未采集到（前面虽然提到了某次源码有个银行账户，但后面发现那只是个测试号，百度出来一堆在用的…），所以还需要通过一些额外的手段去获取有用的信息；
+
+
+## 信息收集
+
+### 宝塔后台
+
+首先想到的就是之前一直留着没进去的宝塔面板后台，里面应该会有些登录信息之类，但并没有得到登录密码，但这也并没有太大影响，因为现在可以直接访问宝塔的数据库文件（`panel/data/default.db`， `sqlite`数据库文件），所以直接进去备份个账户然后设置个密码，防止把正常账户挤下去：
+
+![cmd-change-baota-password](https://img-blog.csdnimg.cn/81f29b991e314d5f9ed76960f23510c1.png)
+
+![cmd-baota-backup-user](https://img-blog.csdnimg.cn/b15aaf41f4cd4750951f44d9567df0dc.png)
+
+清理下日志，然后就是愉快的登录进去 ㄟ( ▔, ▔ )ㄏ：
+
+![front-baota-home](https://img-blog.csdnimg.cn/ca03db6028c443248e27457e1d5d289e.png)
+
+首先看到的就是账户名，想是管理员的手机号，这里看不全，去设置里面瞅瞅：
+
+![front-baota-lookup-phone-elements](https://img-blog.csdnimg.cn/9db11a61cc194587a022d8cbd000b6f9.png)
+
+这里也是中间四位打了星号，从源码里也看不出，但这些也都是纸老虎，因为随后审查发现一处接口请求数据，返回信息里是完整的手机号，微信搜了下也有这个这么个账户：
+
+![wechat-baota-phone](https://img-blog.csdnimg.cn/d134ae727fac42de95ed87cd8e1c7bc1.jpg)
+
+但其真实性未知，多半只是个幌子，先记着吧；
+
+### 新起点
+
+在之后某个时间点准备继续收集信息的时候，发现其域名甚至IP都无法再访问了，后面几天试了也都不行，感觉可能是收割完一波然受卷款跑路了；自然，除了一些信息，之前获取的所有权限，都化作泡影了；也是在这之后，警察蜀黍竟主动联系了过来（没有喝茶，俺是良民 $\_$），由于想着再碰碰运气看看，结果有趣的事再次发生了，访问之前那个IP展示出了这么个页面：
+
+![front-user-login](https://img-blog.csdnimg.cn/d8f9ea546024435eba4ca116e2cedacc.png)
+
+好吧得承认，那一瞬间确实差点信了这标题和图标，还浪费了三秒考虑渗透它的正当性，仔细想想也知道，真要是那家银行，怎么会把服务器放到有前科的IP身上，页面内容也说不过去，然后简单注册了个账号登录进去：
+
+![front-user-home-1](https://img-blog.csdnimg.cn/5748918daa3740178ed3522b4dfba434.png)
+
+![front-user-home-2](https://img-blog.csdnimg.cn/4b565b7234184393934705798b2909a2.png)
+
+![front-user-home-3](https://img-blog.csdnimg.cn/4ae707f6cb484a0c9fde8e8ffbe2fc60.png)
+
+
+## 漏洞挖掘
+
+### 端口服务
+
+=\_= 好吧，来都来了，就是个顺手的事；下面的分析也印证了上面的猜想，这也算是个**IP反查域名** 的小技巧，因为正常的工具比如 `nslookup`, `dig` 只能从域名到IP进行解析（某些有 `ptr` 的除外），但是遇到这种有使用 `https` 的站点，如果没有限制IP直接访问的话，能够正常进入页面，并且在浏览器左上角点击协议名还能查看所使用的证书，正常的证书的“颁发给”的值就是站点的域名，这里显然不是，应该是个临时或者测试证书：
+
+![front-https-cert](https://img-blog.csdnimg.cn/1b16bc4d59144679bbdbe86d354aec68.png)
+
+然后反过来对域名分析一波：
+
+![cmd-nslookup-domain](https://img-blog.csdnimg.cn/86ef8c2ce42842689e9d270eb8156606.png)
+
+这里发现通过公共DNS解析出来的IP，和前面用的好像对不上号，细想下，应该就是使用了 **CDN服务**，这些IP对应的服务器都是提供服务的三方机构的，渗透没太大意义，并且也不容易，这里辛亏是直接通过源站IP进入的，不然要通过域名和CDN检索出源站还是另一项头疼的活儿；
+
+那么有了域名就来扫一波子域名，获取潜在的关联站：
+
+![cmd-enum-subdomain](https://img-blog.csdnimg.cn/cbd67639fbe84a738cb81cba2690a77a.png)
+
+还真有不少，先记着备用，随后从前台页面的返回数据里分析，发现这是一台使用 php 的 Linux 服务器，和之前的 Windows IIS 服务器不同，看来应该是域名被释放或转卖了，那么就从新扫波端口吧：
+
+![nmap-normal-scan](https://img-blog.csdnimg.cn/b95ea3a4c8374611b56eefda1b98208d.png)
+
+还是发现了一些熟悉的身影，依旧先后台跑着密码先吧，按以往的经验，遇到精明的主也许有漏网之鱼，所以还需要贴心的整套全端口扫描服务：
+
+![nmap-all-port-scan](https://img-blog.csdnimg.cn/e9efa523745847cea4abf367afcb000e.png)
+
+还确实有，看协议大概能猜到是什么服务，挨个试试，发现一个是 ssh 登录，一个宝塔后台：
+
+![cmd-ssh-login](https://img-blog.csdnimg.cn/dccf69aff14e4a86a9380e5f81707858.png)
+
+![front-bt-login](https://img-blog.csdnimg.cn/59859f554023465c9b3a1bf2ed494839.png)
+
+宝塔依然有登录次数校验，爆破无望，只能先搁一边；
+
+### 后台目录
+
+这次都还没来得及用上目录爆破，手打了几个就盲猜了出来后台路径，倒也省工夫勒：
+
+![front-admin-login-jump](https://img-blog.csdnimg.cn/75abb9e8ea0b4e4ab52b4a70d1071d23.png)
+
+![front-admin-login](https://img-blog.csdnimg.cn/381d017dc4184844a9c04478ea72a15f.png)
+
+双赢？不存在的，只会是单方面的 ╮（╯＿╰）╭，简单分析了会儿页面，这里就暂时不用祭出神器了，直接用 **`wfuzz`** 跑一波账户密码：
+
+![cmd-wfuzz-admin-login](https://img-blog.csdnimg.cn/ad46afa3696245aaa0e8d77cc77ebf03.png)
+
+先放后台跑着，去其他地方转转；一会儿后就看到了结果，哟西！进去瞅瞅：
+
+![front-admin-home](https://img-blog.csdnimg.cn/a47c5b5f9d09417bba334e44e1a73ca2.png)
+
+![front-admin-products](https://img-blog.csdnimg.cn/78c556d7922f43128235ebcac9c04ff8.png)
+
+![front-admin-user-bank](https://img-blog.csdnimg.cn/3c7a2f64c2634b82bc8dc9459b4cf216.png)
+
+![front-admin-user-info](https://img-blog.csdnimg.cn/365404e506bb407898965c9829da8478.png)
+
+![front-admin-user-charge](https://img-blog.csdnimg.cn/d9cec669f3b64104ae5401105e8f049a.png)
+
+麻雀虽小五脏俱全，然后也有一些预料中的有意思的东西：
+
+![front-admin-user-withdraw](https://img-blog.csdnimg.cn/9c730179c46342b9ac90a9674b6288b2.png)
+
+![front-admin-risk-control](https://img-blog.csdnimg.cn/393f727eef7d4ae7b3a54f6d5b347f9d.png)
+
+提现那个就不说了，能否成功全看管理员心情，下面那个看不太明白也没关系，可能道理大家也都懂，反正就那么个意思，你的命运我掌控，你的风险我操纵 (¬‿¬)；
+
+### Get webshell
+
+后面花了点时间，分析了下页面找到一处可利用的漏洞，然后传个小玩意上去：
+
+![front-backdoor-phpinfo](https://img-blog.csdnimg.cn/96be97e42e77413294eb5d8a8bc822cd.png)
+
+搞定，又到了亮剑的时刻：
+
+![ant-file-site-root](https://img-blog.csdnimg.cn/ebcdf2b0bec54770893970509f733cff.png)
+
+往上遍历目录发现确实不简单，出现了之前的某些域名，难道是小站群，后面花了好一段时间才稍微搞懂他们的架构，多个二级域名指向当前IP，并拥有几个不同的CDN地址，然后某个二级域名又指向另一台服务器IP，当前IP的服务器呢又包含了另一个一级域名对应的二级域名，这几个站点又几乎在共享同一套代码，=\_= 真够复杂的，难道是业务拓展导致的计划不周么，不过着也不重要，对应到服务器就行；
+
+![ant-file-more-sites](https://img-blog.csdnimg.cn/8b17654b7157476b9525d4042adcd251.png)
+
+然后就是访问 `/etc/passwd` 文件查看用户，因为这个文件在 Linux 中是所有用户可访问：
+
+![ant-file-passwd](https://img-blog.csdnimg.cn/c10d2afeb7184069ab55931d85b01c2f.png)
+
+都是些默认账户，由于当前是 www 账户，所以是没有访问 `/etc/shadow` 文件的权限的，这个文件记录的是系统所有账户的密码的 hash 值，所以后面步骤就是提权了；
+
+在浏览系统目录的时候，发现了 `phpMyAdmin` 的登录地址，难怪之前没扫出，应该是宝塔里配置过，生成随机的复杂路径来校验访问入口：
+
+![ant-file-pma-path](https://img-blog.csdnimg.cn/4e74296da8c64bf688c1f444f1b7bfe7.png)
+
+![front-pma-login](https://img-blog.csdnimg.cn/b753058cba7c418e95479f70d80b81af.png)
+
+账户和密码就简单了，可通过某些手段获取，只是可惜对方并不是配置的 root 账户，而是一个子账户，用站点命名，应该是服务器有多站点的缘故，权限也不高，先登录进去看下：
+
+![front-pma-home](https://img-blog.csdnimg.cn/36dcffcdd69245c9890d1e56d2e18879.png)
+
+内部包含的是站点前后台的一些数据，先找下有用的信息：
+
+![front-pma-databases](https://img-blog.csdnimg.cn/8743f2ed769e4590931dd5719865afa8.png)
+
+![front-pma-admin-pass-hash](https://img-blog.csdnimg.cn/5e8d4f4da2144d689ba5c0db293f2499.png)
+
+有个表存的管理员的信息，额这个表名（`bulamao`）……难道又要开始考验我对博大的中国文化熟悉程度了吗，我认输了，有知道的小伙伴可以评论下；表里面有串密码的哈希值，先拿去查一下碰碰运气：
+
+![front-pma-admin-pass-text](https://img-blog.csdnimg.cn/57730a979edc4fedb5225cb8e218c3d9.png)
+
+居然还真有，小本本记下（后面确实为进入其他站点提供了依据）；
+
+### 小插曲
+
+浏览目录的时候也发现了一些精致的小玩意：
+
+![ant-file-backdoors](https://img-blog.csdnimg.cn/4b2f11c67e4d4fc094ced7f9ed078e57.png)
+
+![ant-code-backdoor-abcd-passwd](https://img-blog.csdnimg.cn/7f1411ceef75461cad4b27a5536001d1.png)
+
+![front-backdoor-abcd-login](https://img-blog.csdnimg.cn/62baa5af9517448e9f9cbf36f6f3d4de.png)
+
+![front-backdoor-abcd-home](https://img-blog.csdnimg.cn/949424f41fae4a80966bf168452b1f51.png)
+
+![front-backdoor-adminer](https://img-blog.csdnimg.cn/0dbfd0f29069403b8015939c0c604b99.png)
+
+![front-backdoor-file-manage](https://img-blog.csdnimg.cn/9051041333c340a7b51cb049d38770c8.png)
+
+地方不大，还挺热闹，对面都是大佬惹不起，似乎还有好几拨人，让它们安静的躺着，相爱相杀吧，俺啥都没看见 (x_x)；
+
+
+### disable_functions 绕过
+
+本来是准备打开虚拟终端愉快的研究如何提权的，结果开幕雷击：
+
+![ant-shell-error](https://img-blog.csdnimg.cn/b7153249131044819d0403c80f94fff7.png)
+
+不用说，多半一些系统执行函数被禁用了，就是 php 配置项中的 **`disable_functions`** 值，用于限制能在 php 脚本中执行系统命令的一些函数，当然也存在一些漏洞导致的绕过方法，途径不少，节约时间，就不挨个手工测试了，直接用现有的集成插件：
+
+![ant-plugin-disable-functions-menu](https://img-blog.csdnimg.cn/2ad6ef0ff5114c43a35ce0d929386d45.png)
+
+![ant-plugin-disable-fun-1](https://img-blog.csdnimg.cn/1fd4b5cf158d48ca9ff8748b855af257.png)
+
+看到 `putenv` 被禁用心就凉了半截，光这就能劝退大部分绕过方式了，不过还是得试试，因为还剩一个方法可用（`php-fpm`），通过查看系统配置文件发现，fpm 模块使用的 `socket` 通信方式，配置一下然后启动：
+
+![ant-plugin-disable-fun-2](https://img-blog.csdnimg.cn/0463ebcea0da4840aa4d3ba6847e1fb7.png)
+
+![ant-plugin-disable-fun-3](https://img-blog.csdnimg.cn/5983168ce72645fba62bf4ff9acf8df9.png)
+
+![ant-plugin-disable-fun-start](https://img-blog.csdnimg.cn/3ea800d6a3374433b901ab247199062f.png)
+
+最后提示都是成功，检查其生成的动态链接库文件也是成功上传的，但终端始终无法开启，一直提示返回数据为空，起始以为是插件用的某个函数也被 php 给禁用了导致返回为空，也找到不其他可利用的漏洞，为此还卡了大半周的时间，后来准备查查资料，手动把利用方法实现一遍；
+
+其实该方法的原理大致就是：php 是一门动态语言，但 `nginx` 是无法处理这些的，所以中间还有个 `fastcgi` 协议在牵线搭桥，可类比 `HTTP` 协议，nginx 将接受到的客户端请求转换成 fastcgi 协议格式的数据，而 php 模块中的 `php-fpm` 就是用来处理这些 fastcgi 协议数据的，然后再传给 php 解释器去处理，完成后结果数据又以之前同样的路径返回到浏览器客户端；所以一般在 Linux 服务器上启动 php 程序，都会启动一个叫 php-fpm 的服务，一般会监听本机的 `9000` 端口，或者套接字文件，nginx 的配置文件 fastcgi 访问地址也配成这个端口或文件，这些都是为了完成上述通信过程；
+
+这里面可**利用**的点就是，绕过通往 nginx 的请求，直接与 php-fpm 服务沟通，理想情况就是由于配置失误导致 9000 监听在了外网接口而不是本机接口，当然这种情况也是极少数，但这也并不意味着监听本机就无法利用了，在 php 程序文件可写的前提下，可以在程序中通过 `curl` 接口向服务器本机 9000 端口发起请求（或 `stream_socket_client` 发起套接字文件通信请求），并且是模仿 fastcgi 客户端发送对应格式的数据，这样就能实现绕过 nginx 直接与 php-fpm 沟通；这种操作还有另一种说法，叫 **SSRF**（`Server-Side Request Forgery`），即**服务端请求伪造**，通过服务器去实现访问客户端正常不能访问到的内网资源；当然还有一个和他名字很像的手段： **CSRF**（`Cross-Site Request Forgery`，跨站请求伪造），只不过这个是盗用其他客户端的登录凭证；
+
+可能这里还有个问题，这样绕了一圈去建立通信，最后不是还是会通过 php-fpm 吗，这样配置的函数限制依然存在，其实不然，直接和 php-fpm 沟通的话，它是支持**修改** php 配置的，就是 fastcgi 协议中的 `PHP_VALUE`, `PHP_ADMIN_VALUE` 这两个参数，比如可以设置这两个配置：
+
+```bash
+"PHP_VALUE": "auto_prepend_file = php://input"
+"PHP_ADMIN_VALUE": "allow_url_include = On"
+```
+
+这会导致执行 php 程序之前包含 `HTTP` 中 `POST` 的数据，实现任意代码执行的目的，但即使这样也还是不行，因为这里的任意代码执行依然逃不开 php 配置文件的控制，所以就还需要更进一层，可以利用 `extension` 这个环境变量，设置执行脚本是要引入的动态链接库文件（Linux 下是 `.so`，Windows 下是 `.dll`）：
+
+```bash
+"PHP_VALUE": "extension = /xxx/xxx.so"
+```
+
+这就需要有任意文件上传权限，不过都开始研究限制绕过了，这点权限是肯定有的，然后就是编译构造自己的 `.so` 文件，并向其中添加要执行的系统命令，这样链接库文件在被引入的时候就会执行预定的命令，同时也不受 php 配置文件的限制；这个sao操作也是在研究那个插件代码时发现的 (¬‿¬)，同时也通过抓包找到了之前一直返回空数据的原因：
+
+![fiddler-ant-fpm-request](https://img-blog.csdnimg.cn/8d4b636ac71446e59ab5d8b90e6b03ab.png)
+
+原来插件一直在站点根目录读取配置的后门程序，之前为了掩人耳目是塞到了一个隐蔽的深层目录，所以一直获取不到数据返回空，也算是自己的配置失误，就是这里需要配置为后门程序所在目录：
+
+![ant-plugin-disable-fun-4](https://img-blog.csdnimg.cn/d3794fd917964e3da0960c116943738b.png)
+
+
+### 远程指令执行
+
+目前虽然可以通过插件绕过 disable_functions 并正常使用虚拟终端，但后续并不打算这么做，插件的机理其实就是通过包含 `.so` 时执行里面插入的指令，查看生成的 `.so` 文件可以看到插入了这样一条命令：
+
+![cmd-hexedit-ant-so](https://img-blog.csdnimg.cn/cc01eda30e2443dabc4f283ed5a3fa64.png)
+
+其实就是利用远程指令执行运行了另一个 php 服务，自定义了端口，并且 `-n` 参数是不使用 php 配置文件的意思，这样就实现了绕过 `disable_functions`，方便让其他程序畅通无阻的运行虚拟终端，手段确实有趣，不过这里就大可不必了，都能执行命令了还要虚拟终端干啥，另外经过测试也发现这样连接有一定时效性，大概一分钟左右就会断开连接，原因未知，所以为了后续更愉快的玩耍，直接上 `msf payload`，生成 `elf-so` 格式的文件后上传站点，然后把自定义的 fastcgi 客户端(<https://gist.github.com/phith0n/9615e2420f31048f7e30f3937356cf75>)参数改下，让包含的 `.so` 文件为我们的 `payload` 文件以使其运行：
+
+![cmd-edit-fpm-py](https://img-blog.csdnimg.cn/11349adc0f404953aae8846927fefef9.png)
+
+运行后就会得到构造后的 `fastcgi` 协议数据（TCP数据流），让服务器 php 发送它就好，所以还需要服务端写个 php 程序来配合发送，这是使用使用套接字文件通信时的文件内容：
+```php
+<?php
+ini_set("display_errors", "On");
+error_reporting(E_ALL);
+
+$fp = stream_socket_client("unix:///tmp/php-cgi-56.sock", $errno, $errstr, 30);
+$url = $_GET['url'];
+
+if (!$fp) {
+    echo "Errno: " . "$errstr ($errno)<br />\n";
+} else {
+    try {
+        fwrite($fp, base64_decode($url));
+        var_dump(fread($fp, 8192));
+    } catch (Exception $e) {
+        print_r($e);
+    }
+    fclose($fp);
+}
+```
+
+如果是监听本地 `9000` 端口，可以使用 `fsockopen` 协议来发送 fastcgi 协议数据，具体就是：
+```php
+<?php
+ini_set("display_errors", "On");
+error_reporting(E_ALL);
+
+$fp = fsockopen("127.0.0.1", 9000, $errno, $errstr, 30);
+$url = $_GET['url'];
+
+if (!$fp) {
+    echo "Error: $errstr ($errno)<br />\n";
+} else {
+	try {
+	    fwrite($fp, base64_decode($_GET['url']));
+		var_dump(fread($fp, 8192));
+	} catch (Exception $e) {
+		print_r($e);
+	}
+    fclose($fp);
+}
+```
+
+然后打开 `msfconsole` 开启反向连接监听：
+
+![msf-listen-reverse-tcp](https://img-blog.csdnimg.cn/290fa18c63d24ee2bcabc4a7a1ac83a0.png)
+
+然后本地用浏览器访问一下服务器中的发送 fastcgi 的 php 程序，并凭借上要发送的数据：
+
+![front-msf-reverse-link](https://img-blog.csdnimg.cn/eeb5e14d4c33489597a8da4d03ca7725.png)
+
+正常情况页面会持续加载中，然后 msf 这边就会收到连接请求并进入 `meterpreter shell`，然后看一下系统信息，nice，直接进入 `shell` 进行下一步操作：
+
+![msf-meter-sysinfo](https://img-blog.csdnimg.cn/9c15cb50123d4937ae6885d0fa918403.png)
+
+因为之前说这里的 php 建立的连接只有不到一分钟时间，`.so` 文件执行的指令也不例外，所以这里就到了**争分夺秒**考验手速的时刻了，先断开连接待会重来，然后这次需要准备第二个 `payload` 传到同目录下，为了节省时间可以在第一次连接前以后台任务运行（`run -j`）`meterpreter` 反向监听，这样就不会浪费时间再去切换 `module` 和设置 `payload` 再运行了：
+
+![msf-run-meter-job](https://img-blog.csdnimg.cn/19a345aab60d4ab29da66cc7bc33ebaf.png)
+
+在网页请求后建立第一个 `payload` 连接，然后迅速进入 `shell` 执行一个 `nohup` 后台任务来运行刚才上传的第二个 `payload`：
+
+![msf-link-payload-2](https://img-blog.csdnimg.cn/20f6d91c48114731b4de924525a13804.png)
+
+不出意外第二个 `payload` 的监听任务就会建立连接，并且是持续的**长连接**，第一个连接关掉也无所谓，后面就能愉快地进行其他操作了 (ง •_•)ง
+
+
+## Linux 提权（Privilege Escalation）
+
+前面虽然已花了不少时间，但还没到达最关键的一步，现在才是重头戏，并且也不会太轻松，毕竟这是 Linux 系统，不同于 windows，版本和补丁数量不是特别高的话，提权漏洞一抓一把（这方面也稍微印证了 Linux 系统较于 Windows 更安全），少归少，不至于没有，只能逐个尝试；
+
+### Sudo Baron Samedit（cve-2021-3156）
+
+记得今年（2021）年初正好报了一个 Linux sudo 程序的提权漏洞，正好试下：
+
+![msf-shell-check-baron-samedit](https://img-blog.csdnimg.cn/e5f89792f7e344d0a177ba6185a3d32a.png)
+
+感觉有戏，下个 `exp` 上传手动跑下试试：
+
+![msf-shell-exploit-baron-samedit](https://img-blog.csdnimg.cn/e685becd7d7946e68209c9b155a176db.png)
+
+最后似乎不行，再用 `msf exploit` 试试：
+
+![msf-run-baron-samedit](https://img-blog.csdnimg.cn/3df41d17590140b496ca26127dac4783.png)
+
+等了十几分钟，最后依然失败，这条路应该是行不通了；
+
+### Local Exploit Suggester
+
+这里使用一下这款本地提权建议工具，它会自动获取相关系统信息并提供一些可利用的漏洞建议：
+
+![msf-local-exploit-suggester](https://img-blog.csdnimg.cn/a51c29502ea646578184098fef21a25c.png)
+
+可以看到列举出了不少存在可能性的 `exp`，再去挨个尝试下，结果，也全部无效，心又凉了小半截；
+
+### Suid 提权
+
+简单说 `suid` 是一种权限，它运行具有该权限的文件执行时，能以该文件所有者的权限执行，例如具有所有用户读写执行的文件权限是 `rwxrwxrwx`，那么它再具有 `suid` 权限就会是 `rwsrwxrwx` （第三位是 `s`），权限码就是 `4777`，这里可利用的地方就是，假如某个文件所有者是 `root` 账户，并且其他用户可执行，那么其他用户在执行时，就间接有了 root 权限；
+
+例如利用 `find` 提权执行 `whoami` 就是：
+```bash
+find some-file -exec whoami
+```
+
+可以先查找一下全系统就有该权限特征的文件：
+```bash
+find / -user root -perm -4000 -type f 2>/dev/null
+```
+
+![msf-shell-find-suid](https://img-blog.csdnimg.cn/9e6f005b40984dbbbe154b254a8b6709.png)
+
+虽然有不少但是没有找到可利用的，常见的可利用程序和利用参数大致有（执行高权限的文件或查看高权限文件内容）：
+
+```
+find
+cp
+nmap
+vim
+vi
+bash
+more
+less
+nano
+zip
+tar
+mv
+man
+chmod
+ash
+awk
+python
+perl
+tcpdump
+date
+time
+cpulimit
+```
+
+### crontab 任务
+
+利用定时任务（`cron`）漏洞也是一种思路，假如存在会被定时执行的脚本文件，并且该文件又可写，就可以让其到达时间后执行任意命令；不过检查了一遍，都没有找到可利用的文件；
+
+![ant-file-cron-jobs](https://img-blog.csdnimg.cn/56b9346f8207473ba036a7b00d164656.png)
+
+### 宝塔 CSRF
+
+在一度没辙的时候，把方向转向了之前备份下载的站点源码，分析的时候发现有个日志输出目录，看着输出日志信息都比较详细，就尝试着全局搜一下请求数据之类的，看有没有账户密码或 `cookies` 数据，结果就找到了几处宝塔相关的登录凭证：
+
+![code-runtime-log-bt-token](https://img-blog.csdnimg.cn/53fc25e72b28486580a00caf28ee67b9.png)
+
+但这些凭证的时间都很靠前，应该都失效了，而且在用自己的宝塔服务测试时发现，出了会话 `cookie` 时效为 2 小时外，软件似乎也对 `csrf` 这类漏洞做了限制，比如某个账户在一台电脑登录后，直接拿到浏览器存储的 `cookie` 信息然后放到另一台电脑中去伪造访问，不仅伪造的机子无法登录，原登录的机子也会自动**退出登录**；不过在分析时发现了另外一处 `cookie` 信息，里面似乎包含了宝塔面板的一些信息：
+
+![code-bt-cookies](https://img-blog.csdnimg.cn/e7a7d865e43c404082a8d9ace3352aa4.png)
+
+拿去解码分析下，发现有个隐藏四位的手机号，应该是面板的登录账户名，先留着也许后面有用：
+
+![front-urldecode-bt-info](https://img-blog.csdnimg.cn/9feb1e36d6154e8e91319980b52bb4b0.png)
+
+### mysql 提权
+
+目前来看这条路希望不大，前面提到不同站点使用不同的 mysql 子账户，且分配的权限较低，连 `dumpfile` 这样的指令也执行不了，更不用说 `UDF` 这类提权操作了，也对 `root` 账户进行过密码爆破，都没有收获；想起之前不是拿到一个宝塔的手机号嘛，说不准会用手机作为账户密码，虽然隐藏四位，但无关紧要，总共才一万种可能，直接拿 **`crunch`** 生成一个字典然后拿去 `hydra` 跑一下 root 密码：
+
+![cmd-hydra-pma-phone](https://img-blog.csdnimg.cn/b57734b509d64a7b98dbe15aca1a13ee.png)
+
+虽然跑完也没花多少时间，但结果证明一个也不是，猜想失败；
+
+### Dirty Cow
+
+后续没更多思路时，查了会资料，准备再试下经典的 `Dirty Cow` 提权漏洞：
+
+![msf-priv-dirty-cow](https://img-blog.csdnimg.cn/7dab9b307782428a89b6de1256d7a7f9.png)
+
+然后尴尬的事就发生了，执行了一段时间 `exp` 后，服务器就突然报错断开了，然后 IP 就一直超时再也连不上了，这个 `Kernel panic` ，也就是 Linux 系统的**致命错误**，如果没记错的话无限近似于 Windows 系统中断或蓝屏（难道不经意间让 `exp` 升级为 `DOS` 了……），当然也可能是运气不好对方又关站跑路了，那么就先这样吧，指不定后面谁又接盘了 (T_T)；
+
+### C段嗅探
+
+鉴于这次攻克过于棘手，所以过程中曾对机器的所在网段进行过扫描，然后不小心拿下一台业务类似的，和这次的目标在同一网关管辖下，所以先后台嗅探着数据吧，后面有时间再看看收获；
+
+![msf-shell-c-sniff](https://img-blog.csdnimg.cn/64cc706ae7a8463e95a183a4b02132a7.png)
+
+## 总结
+
+惯例的总结时间，这个就没说啥的了，如果是诈骗是被动诱捕，那么这个就是主动投敌了，不要过分相信别人私下写的代码再呈现给你看的东西，即使它看起来是那样的真实，你所看到的只不过是对方想让你看到的罢了，对方既是规则的执行者也是制定者以及违背者。

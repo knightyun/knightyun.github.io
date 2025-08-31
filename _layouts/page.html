@@ -1,10 +1,24 @@
 ---
-layout: default
-css: ["page.css"]
+css: [
+    "page.css"
+]
+js: [
+    "materialize.min.js",
+    "particles.min.js",
+    "main.min.js",
+    "search.min.js"
+]
 ---
-<div id="page-info">
-  <h3>{{page.title}}</h3>
+
+{% include header.html %}
+
+<div class="container">
+    <div id="page-info">
+        <h1 class="page-title white-text">{{page.title}}</h1>
+    </div>
+    <div id="page-content" class="row">
+        {{ content }}
+    </div>
 </div>
-<div class="row">
-  {{ content }}
-</div>
+
+{% include footer.html %}

@@ -8,39 +8,43 @@
 # For technical reasons, this file is *NOT* reloaded automatically when you use
 # 'bundle exec jekyll serve'. If you change this file, please restart the server process.
 
-# Site settings
-# These are used to personalize your new site. If you look in the HTML files,
-# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
-# You can create any custom variable you would like, and they will be accessible
-# in the templates via {{ site.myvariable }}.
-title: MatJek
-description: > # this means to ignore newlines until "baseurl:"
-  Material theme based on <a href="http://materializecss.com">Materialize.css</a> for jekyll sites
-baseurl: "/matjek"
-url: "https://shawnteoh.github.io"
-permalink: /:year/:month/:day/:title
-repository: ShawnTeoh/matjek
-paginate: 5
+# 以下为自定义的全局变量，可以在 HTML 文件中引用，
+# 比如代码：<h1>{{ site.title }}</h1> 
+# 将会展示为设定的值，也可以自行添加其他自定义全局变量。
+title: 瑝琦的博客 # 网站的标题
+description: > # 网站的描述，可能会出现在搜索引擎展示结果中
+  基于 jekyll 的 Github Pages 个人博客网站，技术的学习、总结、分享与提升
+url: "https://knightyun.github.io" # 网站地址
+github_repo: "https://github.com/knightyun/knightyun.github.io"
+github_profile: "https://github.com/knightyun" # GitHub 个人主页
+user: "瑝琦" # 用于侧栏展示的名字
+user_email: "2386209384@qq.com" # 侧栏展示的联系方式
+paginate: 5 # 主页展示的博客文章数量
+nick_name: "瑝琦" # 昵称
+english_name: "Knight"
+# valine 评论插件配置
+valine:
+  leancloud_appid: "4XY3DoTJmibNe3rHeAKOxqzl-gzGzoHsz"
+  leancloud_appkey: "vjothQHALvgTQF9GrSgj577a"
 
-# MatJek specific configurations
-github_profile: "https://github.com/ShawnTeoh"
-user: "John Doe"
-user_email: "john@doe.com"
-contact_url: "https://goo.gl/tVljbV"
-google_tracking_id: "UA-96359860-1"
-google_site_verification: "UA-96359860-1"
-disqus_shortname: "matjek"
-
-# Build settings
+# jekyll 相关配置
 markdown: kramdown
-gems:
+plugins:
   - jekyll-feed
   - jekyll-paginate
   - jekyll-seo-tag
   - jekyll-sitemap
+  - jekyll-admin
 exclude:
   - Gemfile
   - Gemfile.lock
+  - README.md
+  - COPYING
+  - vendor
+  - minify.cmd
 sass:
   style: compressed
+lang: zh_CN
 future: true
+permalink: /:year/:month/:day/:title
+theme: jekyll-theme-slate

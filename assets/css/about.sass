@@ -7,10 +7,33 @@
   -o-transition: $args
   transition: $args
 
+@keyframes word-waiting
+  from 
+    border-bottom: 3px solid black
+  to 
+    border-bottom: none
+
 .user-pic
   img
     width: 100px
     height: auto
 
-.hidden
-  display: none
+.user-content
+  margin-top: 30px
+
+.typing-text
+  font-size: 1.5em
+
+.word-typing
+  display: inline-block
+  width: .5em
+  font-size: 1.5em
+  border-bottom: 3px solid black
+  vertical-align: text-bottom
+
+.word-waiting
+  display: inline-block
+  width: .5em
+  font-size: 1.5em
+  vertical-align: text-bottom
+  animation: word-waiting 1s linear infinite

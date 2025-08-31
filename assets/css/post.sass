@@ -1,5 +1,9 @@
 ---
 ---
+@font-face
+  font-family: 'Source Code Pro'
+  src: url(/assets/fonts/SourceCodePro-Regular.ttf)
+
 @mixin transition($args...)
   -webkit-transition: $args
   -moz-transition: $args
@@ -8,66 +12,106 @@
   transition: $args
 
 main
+  strong
+    font-weight: bold
+  .page-title
+    font-size: 1.8em
+  #page-content
+    margin-top: 0
+  
   div
+    .material-placeholder
+      img
+        max-height: 60vh
+        max-width: 90%
+        margin: auto
     .divider
       margin: 10px 0
-
+    p
+      font-size: 16px
     &.highlighter-rouge
-      margin: 1em 20px
-
+      margin: 1em .5em
+      color: #f8f8f2
       pre
-        padding: 5px
-
+        padding: 5px 8px
+        border-radius: 5px
+        overflow: auto
+    .program-knight
+      text-align: center
+      p
+        font-size: 20px
+        font-weight: bold
+        line-height: 10px
+      img
+        width: 250px
+      div
+        img
+          width: 24px
+          margin-right: 10px
+  
+  blockquote
+    color: #888
+    background: #e2e2e2
+    border-left-color: #d2d2d2
+    overflow: hidden
+  code
+    font-family: consolas, 'Source Code Pro'
+    &.language-plaintext
+      padding: .2em
+      border-radius: .2em
+      color: #c7254e
+      background: #e6e2e4
+  
   figure
     &.highlight
       margin: 1em 20px
-
       pre
         white-space: pre-wrap
-
       table
         width: auto
-
-#post-info
-  h3
-    font-weight: bold
-    margin-bottom: 15px
-
-  ul
-    &:not(.browser-default)
-      padding-left: 0
-      width: 40%
-
-      li
-        list-style-type: none
-
-  span
-    font-size: 14px
-    display: block
-    margin-bottom: 5px
-
-    i
-      font-size: 11.5px
-      margin-right: 10px
-
-      &#indicate
-        font-size: 20px
-
-    .chip
-      color: #616161
-      margin-right: 5px
-
-      &:hover
-        color: #fff
-        background-color: #616161
-
-      @include transition(all .3s ease-in-out)
-
-@media only screen and (max-width: 992px)
+  
   #post-info
-    h3
-      text-align: center
-
     ul
       &:not(.browser-default)
-        width: 100%
+        padding-left: 0
+        width: 40%
+        li
+          list-style-type: none
+    span
+      font-size: 14px
+      display: block
+      margin-bottom: 5px
+      i
+        font-size: 11.5px
+        margin-right: 10px
+        &#indicate
+          font-size: 20px
+      .chip
+        color: #616161
+        margin-right: 5px
+        &:hover
+          color: #fff
+          background-color: #616161
+        @include transition(all .3s ease-in-out)
+
+  #post-content
+    table, th, td
+      border: 1px solid #ccc
+    table
+      thead
+        tr
+          background: #e7e8e9
+        th
+          text-align: center
+      tbody
+        tr:nth-child(2n + 1)
+          background: #f7f7f7
+
+@media only screen and (max-width: 992px)
+  main
+    #post-info
+      h4
+        text-align: center
+      ul
+        &:not(.browser-default)
+          width: 100%

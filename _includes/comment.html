@@ -1,0 +1,16 @@
+<!-- 评论插件 -->
+<div class="comments"></div>
+<hr />
+
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '.comments',
+        appId: '{{site.valine.leancloud_appid}}',
+        appKey: '{{site.valine.leancloud_appkey}}',
+        avatar: 'robohash',
+        placeholder: '欢迎留言（支持Markdown）~',
+        // visitor: true,
+    });
+    document.querySelector('input.vmail.vinput').placeholder = '邮箱（用于评论回复提醒）';
+</script>

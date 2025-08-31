@@ -1,0 +1,27 @@
+---
+---
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+
+    <channel>
+        <title>{{ site.title }}</title>
+        <link>{{ site.url }}</link>
+        <description>{{ site.description }}</description>
+        <lastBuildDate>{{ site.time | date_to_rfc822 }}</lastBuildDate>
+        {% for post in site.posts %}
+        <item>
+            <title>{{ post.title | escape }}</title>
+            <link>
+                {{ post.url | prepend: site.url }}
+            </link>
+            <description>
+                {{ post.content | escape }}
+            </description>
+            <pubDate>{{ post.date | date_to_rfc822 }}</pubDate>
+            <guid>
+                {{ post.url | prepend: site.url }}
+            </guid>
+        </item>
+        {% endfor %}
+    </channel>
+</rss>

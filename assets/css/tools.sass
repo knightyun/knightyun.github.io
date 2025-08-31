@@ -1,0 +1,45 @@
+---
+---
+.card
+  display: flex
+  flex-wrap: wrap
+  margin-bottom: 2em
+  overflow: auto
+
+  .card-image
+    overflow-x: hidden
+    flex: 3
+    min-width: 300px
+
+    .card-image-icon
+      position: absolute
+      top: 0
+      right: 0
+    i
+      padding: 10px
+      color: #fff
+      font-size: 20px
+      &:hover
+        color: #2196F3
+        border-radius: 50%
+        border: 1px outset #26a69a
+    a.card-title
+      position: unset
+      font-weight: bold
+      color: #fff
+      width: 100%
+      height: 100%
+      line-height: 100%
+      justify-content: center
+      word-break: break-all
+      z-index: -1
+
+  .card-content
+    flex: 2
+    min-width: 200px
+    overflow: hidden
+    font-size: 14px
+    line-height: 110%
+
+    span
+      width: 100%

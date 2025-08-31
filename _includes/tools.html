@@ -1,0 +1,27 @@
+{% if site.github.public_repositories %}
+{% assign sorted_repos = (site.github.public_repositories | sort: 'pushed_at') | reverse %}
+
+{% for repo in sorted_repos %}
+{% if repo.homepage != nil and repo.homepage != '' and repo.fork == false %}
+<div class="col s12">
+    <div class="card hoverable">
+        <div class="card-image waves-effect waves-block waves-light geopattern activator"
+            data-pattern-id="{{repo.name}}">
+            <a href="{{repo.html_url}}" class="card-image-icon" target="_blank">
+                <i class="material-icons waves-effect waves-block waves-light tooltipped" data-position="right"
+                    data-tooltip="Github:&lt;br&gt;{{repo.html_url}}">code</i>
+            </a>
+            <a class="card-title center-align valign-wrapper tooltipped" href="{{repo.homepage}}" data-position="right"
+                data-tooltip="{{repo.homepage}}" target="_blank">
+                {{repo.name}}
+            </a>
+        </div>
+        <div class="card-content valign-wrapper center-align activator">
+            <span class="activator grey-text text-darken-1">{{repo.description}}</span>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+
+{% endif %}

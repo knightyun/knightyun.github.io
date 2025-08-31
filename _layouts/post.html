@@ -1,59 +1,93 @@
 ---
-layout: default
-css: ["post.css"]
-js: ["post.js"]
+layout: page
+css: [
+    "page.css",
+    "post.css",
+    "syntax.css",
+    "article-category.css"
+]
+js: [
+    "materialize.min.js",
+    "post.min.js",
+    "particles.min.js",
+    "main.min.js",
+    "search.min.js",
+    "gen-category.min.js"
+]
 ---
 <div id="post-info">
-  <h3>{{page.title}}</h3>
-  <ul class="collapsible hoverable" data-collapsible="accordion">
-    <li>
-      <div class="collapsible-header">
-        <span>
-          <i class="material-icons tooltipped" data-position="left" data-delay="30" data-tooltip="Date">date_range</i>
-          {{page.date | date: "%d/%m/%Y %H:%M"}}
-          <i id="indicate" class="right material-icons tooltipped" data-position="left" data-delay="30" data-tooltip="Show extra info">info</i>
-        </span>
-      </div>
-      <div class="collapsible-body">
-        <span>
-          <i class="material-icons tooltipped" data-position="left" data-delay="30" data-tooltip="Categories">sort</i>
-          {% for cat in page.categories %}
-          {% capture test %}{{cat | slice: 0}}{% endcapture %}
-          {% capture testup %}{{cat | slice: 0 | upcase}}{% endcapture %}
-          <a href="{{site.baseurl}}/categories#{{cat | slugify}}{% if test == testup %}_cap{% endif %}" target="_blank"><div class="chip">{{cat}}</div></a>
-          {% endfor %}
-        </span>
-        <span>
-          <i class="material-icons tooltipped" data-position="left" data-delay="30" data-tooltip="Tags">label</i>
-          {% for tag in page.tags %}
-          {% capture test %}{{tag | slice: 0}}{% endcapture %}
-          {% capture testup %}{{tag | slice: 0 | upcase}}{% endcapture %}
-          <a href="{{site.baseurl}}/tags#{{tag | slugify}}{% if test == testup %}_cap{% endif %}" target="_blank"><div class="chip">{{tag}}</div></a>
-          {% endfor %}
-        </span>
-      </div>
-    </li>
-  </ul>
+    <ul class="collapsible hoverable" data-collapsible="accordion">
+        <li>
+            <div class="collapsible-header grey lighten-4">
+                <span>
+                    <i class="material-icons tooltipped" data-position="left" data-delay="30" data-tooltip="Date">date_range</i>
+                    {{page.date | date: "%d/%m/%Y %H:%M"}}<br />
+                    <div id="busuanzi_container_site_pv">点击量：<span style="display: inline;" id="busuanzi_value_page_pv"></span>次</div>
+                    <i id="indicate" class="right material-icons tooltipped" data-position="left" data-delay="30"
+                        data-tooltip="Show extra info">info</i>
+                </span>
+            </div>
+            <div class="collapsible-body">
+                <span>
+                    <i class="material-icons tooltipped" data-position="left" data-delay="30" data-tooltip="Categories">sort</i>
+                    {% for cat in page.categories %}
+                    {% capture test %}{{cat | slice: 0}}{% endcapture %}
+                    {% capture testup %}{{cat | slice: 0 | upcase}}{% endcapture %}
+                    <a href="/categories#{{cat | slugify}}{% if test == testup %}_cap{% endif %}"
+                        target="_blank">
+                        <div class="chip">{{cat}}</div>
+                    </a>
+                    {% endfor %}
+                </span>
+                <span>
+                    <i class="material-icons tooltipped" data-position="left" data-delay="30" data-tooltip="Tags">label</i>
+                    {% for tag in page.tags %}
+                    {% capture test %}{{tag | slice: 0}}{% endcapture %}
+                    {% capture testup %}{{tag | slice: 0 | upcase}}{% endcapture %}
+                    <a href="/tags#{{tag | slugify}}{% if test == testup %}_cap{% endif %}" target="_blank">
+                        <div class="chip">{{tag}}</div>
+                    </a>
+                    {% endfor %}
+                </span>
+            </div>
+        </li>
+    </ul>
 </div>
 <div class="divider"></div>
-<div class="row">
-  <div class="col s12">
-    {{ content }}
-  </div>
+<div id="post-content" class="row">
+    <div class="col s12">
+        {{ content }}
+    </div>
 </div>
-{% if site.disqus_shortname and page.comments %}
-<div id="disqus_thread"></div>
+<hr>
+
+<!-- valine 评论插件 -->
+<h3>评论：</h3>
+{% include comment.html %}
+
+<!-- 微信公众号 -->
+<div class="program-knight">
+    <p>技术文章推送</p>
+    <p>手机、电脑实用软件分享</p>
+    <img src="/assets/img/knight.png" alt="微信搜索公众号: 程序骑士" title="微信搜索公众号: 程序骑士">
+    <div>
+        <img src="/assets/img/wechat.png" alt="wechat">
+        <b>微信公众号：程序骑士</b>
+    </div>
+</div>
+<!--百度资源自动提交-->
+{% if jekyll.environment == 'production' %}
 <script>
-  var disqus_config = function () {
-    this.page.url = "{{site.url}}{{site.baseurl}}{{page.url}}";
-    this.page.identifier = "{{page.id}}";
-  };
-  (function() { // DON'T EDIT BELOW THIS LINE
-    var d = document, s = d.createElement('script');
-    s.src = '//{{site.disqus_shortname}}.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
+    window.addEventListener('DOMContentLoaded', function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    });
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 {% endif %}
