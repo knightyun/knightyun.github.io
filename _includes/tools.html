@@ -2,7 +2,7 @@
 {% assign sorted_repos = (site.github.public_repositories | sort: 'pushed_at') | reverse %}
 
 {% for repo in sorted_repos %}
-{% if repo.homepage != nil and repo.homepage != '' and repo.fork == false %}
+{% if repo.homepage != nil and repo.homepage != '' %}
 <div class="col s12">
     <div class="card hoverable">
         <div class="card-image waves-effect waves-block waves-light geopattern activator"
